@@ -267,6 +267,10 @@ setSwatch({target: document.getElementsByClassName('swatch')[0]});
     canvas.addEventListener('mouseup', disengage, false);
     canvas.addEventListener('mousemove', putPoint, false);
 
+    canvas.addEventListener("touchstart", engage, false);
+    canvas.addEventListener("touchend", disengage, false);
+    canvas.addEventListener("touchmove", putPoint, false);
+
     //events for radius.js
     decRad.addEventListener('click', function () {
         setRadius(radius - interval);
