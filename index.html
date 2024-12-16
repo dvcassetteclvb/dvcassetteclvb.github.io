@@ -137,7 +137,12 @@ context.lineWidth = radius*2;
 
 var putPoint = function (e) {
     if (dragging) {
-        context.lineTo(e.clientX, e.clientY);
+        if (e.type == 'touchmove'){
+          context.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+        } else if (e.type == 'mousemove'){
+          context.lineTo(e.clientX, e.clientY);
+        }
+
         context.stroke();
         context.beginPath();
         context.arc(e.clientX, e.clientY, radius, 0, Math.PI * 2);
@@ -149,7 +154,13 @@ var putPoint = function (e) {
         */
         context.fill();
         context.beginPath();
-        context.moveTo(e.clientX, e.clientY);
+
+        // ctx.moveTo(e.clientX, e.clientY);
+        if (e.type == 'touchmove'){
+          context.moveTo(e.touches[0].clientX, e.touches[0].clientY);
+        } else if (e.type == 'mousemove'){
+          context.moveTo(e.clientX, e.clientY);
+        }
 
     }
 
