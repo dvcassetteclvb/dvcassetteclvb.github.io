@@ -36,7 +36,9 @@ body {
     top: 0;
     background-color: rgba(255,255,255,0.8);
     color: black;
-}
+    display: flex;
+    flex-direction: row;
+  }
 
 .radcontrol {
     width: 30px;
@@ -53,11 +55,11 @@ body {
 }
 
 #rad {
-    float: left;
+    flex: 25%;
 }
 
 #colors {
-    float: right;
+    flex: 75%;
 }
 
 .swatch {
@@ -77,6 +79,11 @@ body {
 canvas {
     display: block;
     background-size: cover;
+}
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (max-width: 800px) {
+  #toolbar { flex-direction: column; }
 }
 
 </style>
