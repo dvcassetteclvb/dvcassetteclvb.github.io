@@ -10,223 +10,92 @@
 
 
 
-  <style id="INLINE_PEN_STYLESHEET_ID">
-    *{
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      font-family: sans-serif;
-      user-select: none;
-      -webkit-user-select:none;
-      -moz-user-select:none;
-      -ms-user-select:none;
-      cursor: pointer;
-    }
+<style>
+* {
+    box-sizing: border-box;
+    /* adds border to inside of block elements, not outside (makes calculating widths easier */
+    font-family: sans-serif;
 
-    canvas {
-        background-size: cover;
-    }
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    /* makes all elements of page unselectable */
+}
 
-    #toolbar {
-      width:100%;
-      height: 50px;
-      padding: 10px;
-      position: fixed;
-      top: 0;
-      background-color: rgba(255,255,255,0.8);
-      color: #000;
-    }
+body {
+        margin: 0;
+}
 
-    .radControl{
-      width: 30px;
-      height: 30px;
-      background-color: #4f4f4f;
-      display: inline-block;
-      text-align: center;
-      padding: 7px;
-    }
+#toolbar {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    /* fixed on top of canvas */
+    background-color: #2f2f2f;
+    color: white;
+}
 
-    #rad{
-      float:left;
-    }
+.radcontrol {
+    width: 30px;
+    height: 30px;
+    background-color: #4f4f4f;
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+}
 
-    #colors {
-      float: right;
-    }
+#rad {
+    float: left;
+}
 
-    .swatch {
-      width: 30px;
-      height: 30px;
-      border-radius: 15px;
-      box-shadow: inset 0px 1px 0px rgba(255,255,255,0.5), 0px 2px 2px rgba(0,0,0,0.5);
-      display: inline-block;
-      margin-left:10px;
-    }
+#colors {
+    float: right;
+}
+
+.swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.5);
+    display: inline-block;
+    margin-left: 10px;
+}
 
     .swatch.active {
-      border: 2px solid white;
-      box-shadow: inset 0px 1px 2px rgba(0,0,0,0.5);
+        border: 2px solid white;
+        box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
-
-    </style>
+canvas {
+    display: block;
+}
+</style>
 </head>
 
 <body>
-     <div id="toolbar">
-         <div id="rad"><!-- radius control -->
-           Radius<span id="radVal">10</span>
-           <div id="decRad" class = "radControl">-</div>
-           <div id="incRad" class = "radControl">+</div>
-       </div><!-- end of rad -->
-       <div id="colors">
 
-       </div><!-- end of colors -->
-    </div><!-- end of toolbar -->
-    <!-- style='display:block' gets rid of scroll bars since canvas is an inline element -->
-    <canvas id="canvas" style="display: block;">Browser not supported</canvas>
+    <div id="toolbar">
+        <div id="rad">
+            Radius <span id="radval">10</span>
+            <div id="decrad" class="radcontrol">-</div>
+            <div id="incrad" class="radcontrol">+</div>
+        </div>
+        <div id="colors">
+            <!--
+                populated by JS function
+            -->
+        </div>
+    </div>
+
+    <canvas id="canvas">
+        Sorry, your browser is rubbish.
+    </canvas>
 
 
-<script>
-    window.HUB_EVENTS={ASSET_ADDED:"ASSET_ADDED",ASSET_DELETED:"ASSET_DELETED",ASSET_DESELECTED:"ASSET_DESELECTED",ASSET_SELECTED:"ASSET_SELECTED",ASSET_UPDATED:"ASSET_UPDATED",CONSOLE_CHANGE:"CONSOLE_CHANGE",CONSOLE_CLOSED:"CONSOLE_CLOSED",CONSOLE_EVENT:"CONSOLE_EVENT",CONSOLE_OPENED:"CONSOLE_OPENED",CONSOLE_RUN_COMMAND:"CONSOLE_RUN_COMMAND",CONSOLE_SERVER_CHANGE:"CONSOLE_SERVER_CHANGE",EMBED_ACTIVE_PEN_CHANGE:"EMBED_ACTIVE_PEN_CHANGE",EMBED_ACTIVE_THEME_CHANGE:"EMBED_ACTIVE_THEME_CHANGE",EMBED_ATTRIBUTE_CHANGE:"EMBED_ATTRIBUTE_CHANGE",EMBED_RESHOWN:"EMBED_RESHOWN",FORMAT_FINISH:"FORMAT_FINISH",FORMAT_ERROR:"FORMAT_ERROR",FORMAT_START:"FORMAT_START",IFRAME_PREVIEW_RELOAD_CSS:"IFRAME_PREVIEW_RELOAD_CSS",IFRAME_PREVIEW_URL_CHANGE:"IFRAME_PREVIEW_URL_CHANGE",KEY_PRESS:"KEY_PRESS",LINTER_FINISH:"LINTER_FINISH",LINTER_START:"LINTER_START",PEN_CHANGE_SERVER:"PEN_CHANGE_SERVER",PEN_CHANGE:"PEN_CHANGE",PEN_EDITOR_CLOSE:"PEN_EDITOR_CLOSE",PEN_EDITOR_CODE_FOLD:"PEN_EDITOR_CODE_FOLD",PEN_EDITOR_ERRORS:"PEN_EDITOR_ERRORS",PEN_EDITOR_EXPAND:"PEN_EDITOR_EXPAND",PEN_EDITOR_FOLD_ALL:"PEN_EDITOR_FOLD_ALL",PEN_EDITOR_LOADED:"PEN_EDITOR_LOADED",PEN_EDITOR_REFRESH_REQUEST:"PEN_EDITOR_REFRESH_REQUEST",PEN_EDITOR_RESET_SIZES:"PEN_EDITOR_RESET_SIZES",PEN_EDITOR_SIZES_CHANGE:"PEN_EDITOR_SIZES_CHANGE",PEN_EDITOR_UI_CHANGE_SERVER:"PEN_EDITOR_UI_CHANGE_SERVER",PEN_EDITOR_UI_CHANGE:"PEN_EDITOR_UI_CHANGE",PEN_EDITOR_UI_DISABLE:"PEN_EDITOR_UI_DISABLE",PEN_EDITOR_UI_ENABLE:"PEN_EDITOR_UI_ENABLE",PEN_EDITOR_UNFOLD_ALL:"PEN_EDITOR_UNFOLD_ALL",PEN_ERROR_INFINITE_LOOP:"PEN_ERROR_INFINITE_LOOP",PEN_ERROR_RUNTIME:"PEN_ERROR_RUNTIME",PEN_ERRORS:"PEN_ERRORS",PEN_LIVE_CHANGE:"PEN_LIVE_CHANGE",PEN_LOGS:"PEN_LOGS",PEN_MANIFEST_CHANGE:"PEN_MANIFEST_CHANGE",PEN_MANIFEST_FULL:"PEN_MANIFEST_FULL",PEN_PREVIEW_FINISH:"PEN_PREVIEW_FINISH",PEN_PREVIEW_START:"PEN_PREVIEW_START",PEN_SAVED:"PEN_SAVED",POPUP_CLOSE:"POPUP_CLOSE",POPUP_OPEN:"POPUP_OPEN",POST_CHANGE:"POST_CHANGE",POST_SAVED:"POST_SAVED",PROCESSING_FINISH:"PROCESSING_FINISH",PROCESSING_START:"PROCESSED_STARTED"},"object"!=typeof window.CP&&(window.CP={}),window.CP.PenTimer={programNoLongerBeingMonitored:!1,timeOfFirstCallToShouldStopLoop:0,_loopExits:{},_loopTimers:{},START_MONITORING_AFTER:2e3,STOP_ALL_MONITORING_TIMEOUT:5e3,MAX_TIME_IN_LOOP_WO_EXIT:2200,exitedLoop:function(E){this._loopExits[E]=!0},shouldStopLoop:function(E){if(this.programKilledSoStopMonitoring)return!0;if(this.programNoLongerBeingMonitored)return!1;if(this._loopExits[E])return!1;var _=this._getTime();if(0===this.timeOfFirstCallToShouldStopLoop)return this.timeOfFirstCallToShouldStopLoop=_,!1;var o=_-this.timeOfFirstCallToShouldStopLoop;if(o<this.START_MONITORING_AFTER)return!1;if(o>this.STOP_ALL_MONITORING_TIMEOUT)return this.programNoLongerBeingMonitored=!0,!1;try{this._checkOnInfiniteLoop(E,_)}catch{return this._sendErrorMessageToEditor(),this.programKilledSoStopMonitoring=!0,!0}return!1},_sendErrorMessageToEditor:function(){try{if(this._shouldPostMessage()){var E={topic:HUB_EVENTS.PEN_ERROR_INFINITE_LOOP,data:{line:this._findAroundLineNumber()}};parent.postMessage(E,"*")}else this._throwAnErrorToStopPen()}catch{this._throwAnErrorToStopPen()}},_shouldPostMessage:function(){return document.location.href.match(/boomboom/)},_throwAnErrorToStopPen:function(){throw"We found an infinite loop in your Pen. We've stopped the Pen from running. More details and workarounds at https://blog.codepen.io/2016/06/08/can-adjust-infinite-loop-protection-timing/"},_findAroundLineNumber:function(){var E=new Error("ignored"),_=0;if(E.stack){var o=E.stack.match(/boomboom\S+:(\d+):\d+/);o&&(_=o[1])}return _},_checkOnInfiniteLoop:function(E,_){if(!this._loopTimers[E])return this._loopTimers[E]=_,!1;if(_-this._loopTimers[E]>this.MAX_TIME_IN_LOOP_WO_EXIT)throw"Infinite Loop found on loop: "+E},_getTime:function(){return Date.now()}},window.CP.shouldStopExecution=function(E){var _=window.CP.PenTimer.shouldStopLoop(E);return!0===_&&console.warn("[CodePen]: An infinite loop (or a loop taking too long) was detected, so we stopped its execution. More details at https://blog.codepen.io/2016/06/08/can-adjust-infinite-loop-protection-timing/"),_},window.CP.exitedLoop=function(E){window.CP.PenTimer.exitedLoop(E)};
-</script>
 
-<script>
-    !function(){function E(E){var e=Array.prototype.slice.call(E),t=[],n=[];for(const E of e)n.push(_(E)),t.push(S(E));return{complexities:t,stringifiedArguments:n}}function _(E){return o(t(T(E)))}function e(E){return`${g}${E}${g}`}function t(E){return E.replace(p,"")}function n(E){try{return null===E?I:void 0===E?P:N(E)?A:Object.prototype.toString.call(E)}catch{return l}}function N(E){return!!(E&&"object"==typeof E&&"nodeType"in E&&1===E.nodeType&&E.outerHTML)}function S(E){switch(n(E)){case I:case P:case L:case C:case a:case f:return M;case l:case s:case H:case u:return F;case A:return U;case d:case D:case i:for(var _ of E){var e=n(_);if(e===s||e===l||e===D)return F}return M;default:return F}}function o(E){return E.length>c?E.slice(0,c)+"\u2026":E}function r(E){let _=typeof E;return"function"===_||"symbol"===_?e(E.toString()):"undefined"===_?e("undefined"):"bigint"===_&&e(`${E.toString()}n`)}function R(E){let _=r(E);return _||E}function O(E,_){if(""===E)return _;if(n(_)===D)return _.map(R);return"function"==typeof Object.getOwnPropertyDescriptor(this,E).get?e("\u2026"):R(_)}function T(E){try{var _=n(E);switch(_){case I:return e("null");case P:return e("undefined");case L:return e(""+E);case C:return e(`${E.toString()}n`);case a:return e(E?"true":"false");case A:return e(E.outerHTML);case H:case s:return e(E.toString());case f:return'"'+E.replace(/"/g,"'")+'"';case i:return`// ${_} (${(E=Array.prototype.slice.call(E,0)).length})\n[${E.map((E=>E.tagName?e(`<${E.tagName.toLowerCase()}/>`):e(`${E.nodeName.toLowerCase()}`)))}]`;case D:return`// ${_} (${E.length})\n[${E.map(T)}]`;case d:return`// ${_} (${(E=[...E]).length})\n{${E.map(T)}}`;case l:return`// ${_} \n${JSON.stringify(E,O,2)}`;default:return r(E)?r(E):`// ${_} \n${JSON.stringify(E,O,2)}`}}catch{return"/* Log Skipped: Sorry, this log cannot be shown. You might need to use the browser console instead. */"}}const c=2e3,I="TYPE_NULL",P="TYPE_UNDEFINED",A="TYPE_ELEMENT_NODE",D="[object Array]",i="[object NodeList]",a="[object Boolean]",s="[object Function]",u="[object global]",L="[object Number]",C="[object BigInt]",l="[object Object]",f="[object String]",H="[object Symbol]",d="[object Set]";window.__cpConsoleSafeStringify=E;const g="\ue799\ue798",p=new RegExp(`"${g}|${g}"|${g}`,"gm"),M=1,F=2,U=3}(),window.HUB_EVENTS={ASSET_ADDED:"ASSET_ADDED",ASSET_DELETED:"ASSET_DELETED",ASSET_DESELECTED:"ASSET_DESELECTED",ASSET_SELECTED:"ASSET_SELECTED",ASSET_UPDATED:"ASSET_UPDATED",CONSOLE_CHANGE:"CONSOLE_CHANGE",CONSOLE_CLOSED:"CONSOLE_CLOSED",CONSOLE_EVENT:"CONSOLE_EVENT",CONSOLE_OPENED:"CONSOLE_OPENED",CONSOLE_RUN_COMMAND:"CONSOLE_RUN_COMMAND",CONSOLE_SERVER_CHANGE:"CONSOLE_SERVER_CHANGE",EMBED_ACTIVE_PEN_CHANGE:"EMBED_ACTIVE_PEN_CHANGE",EMBED_ACTIVE_THEME_CHANGE:"EMBED_ACTIVE_THEME_CHANGE",EMBED_ATTRIBUTE_CHANGE:"EMBED_ATTRIBUTE_CHANGE",EMBED_RESHOWN:"EMBED_RESHOWN",FORMAT_FINISH:"FORMAT_FINISH",FORMAT_ERROR:"FORMAT_ERROR",FORMAT_START:"FORMAT_START",IFRAME_PREVIEW_RELOAD_CSS:"IFRAME_PREVIEW_RELOAD_CSS",IFRAME_PREVIEW_URL_CHANGE:"IFRAME_PREVIEW_URL_CHANGE",KEY_PRESS:"KEY_PRESS",LINTER_FINISH:"LINTER_FINISH",LINTER_START:"LINTER_START",PEN_CHANGE_SERVER:"PEN_CHANGE_SERVER",PEN_CHANGE:"PEN_CHANGE",PEN_EDITOR_CLOSE:"PEN_EDITOR_CLOSE",PEN_EDITOR_CODE_FOLD:"PEN_EDITOR_CODE_FOLD",PEN_EDITOR_ERRORS:"PEN_EDITOR_ERRORS",PEN_EDITOR_EXPAND:"PEN_EDITOR_EXPAND",PEN_EDITOR_FOLD_ALL:"PEN_EDITOR_FOLD_ALL",PEN_EDITOR_LOADED:"PEN_EDITOR_LOADED",PEN_EDITOR_REFRESH_REQUEST:"PEN_EDITOR_REFRESH_REQUEST",PEN_EDITOR_RESET_SIZES:"PEN_EDITOR_RESET_SIZES",PEN_EDITOR_SIZES_CHANGE:"PEN_EDITOR_SIZES_CHANGE",PEN_EDITOR_UI_CHANGE_SERVER:"PEN_EDITOR_UI_CHANGE_SERVER",PEN_EDITOR_UI_CHANGE:"PEN_EDITOR_UI_CHANGE",PEN_EDITOR_UI_DISABLE:"PEN_EDITOR_UI_DISABLE",PEN_EDITOR_UI_ENABLE:"PEN_EDITOR_UI_ENABLE",PEN_EDITOR_UNFOLD_ALL:"PEN_EDITOR_UNFOLD_ALL",PEN_ERROR_INFINITE_LOOP:"PEN_ERROR_INFINITE_LOOP",PEN_ERROR_RUNTIME:"PEN_ERROR_RUNTIME",PEN_ERRORS:"PEN_ERRORS",PEN_LIVE_CHANGE:"PEN_LIVE_CHANGE",PEN_LOGS:"PEN_LOGS",PEN_MANIFEST_CHANGE:"PEN_MANIFEST_CHANGE",PEN_MANIFEST_FULL:"PEN_MANIFEST_FULL",PEN_PREVIEW_FINISH:"PEN_PREVIEW_FINISH",PEN_PREVIEW_START:"PEN_PREVIEW_START",PEN_SAVED:"PEN_SAVED",POPUP_CLOSE:"POPUP_CLOSE",POPUP_OPEN:"POPUP_OPEN",POST_CHANGE:"POST_CHANGE",POST_SAVED:"POST_SAVED",PROCESSING_FINISH:"PROCESSING_FINISH",PROCESSING_START:"PROCESSED_STARTED"},function(){function E(){if(window.console)for(const E of t)window.console[E]&&(window.console[E]=function(){this.apply(console,arguments),_(E,arguments)}.bind(console[E]))}function _(E,_){const e=window.__cpConsoleSafeStringify(_),{complexities:t,stringifiedArguments:n}=e,N={topic:HUB_EVENTS.CONSOLE_EVENT,data:{function:E,arguments:n,complexity:Math.max.apply(null,t)}};window.parent.postMessage(N,"*")}function e(E){const{topic:_,data:e}="object"==typeof E.data?E.data:{};if(_===HUB_EVENTS.CONSOLE_RUN_COMMAND)try{const E=window.eval(e.command);console.log(E)}catch(E){return void console.error(E.message)}}const t=["clear","count","debug","error","info","log","table","time","timeEnd","warn"];E(),window.addEventListener("message",e,!1)}();
-</script>
-
-<script>
-    window.HUB_EVENTS={ASSET_ADDED:"ASSET_ADDED",ASSET_DELETED:"ASSET_DELETED",ASSET_DESELECTED:"ASSET_DESELECTED",ASSET_SELECTED:"ASSET_SELECTED",ASSET_UPDATED:"ASSET_UPDATED",CONSOLE_CHANGE:"CONSOLE_CHANGE",CONSOLE_CLOSED:"CONSOLE_CLOSED",CONSOLE_EVENT:"CONSOLE_EVENT",CONSOLE_OPENED:"CONSOLE_OPENED",CONSOLE_RUN_COMMAND:"CONSOLE_RUN_COMMAND",CONSOLE_SERVER_CHANGE:"CONSOLE_SERVER_CHANGE",EMBED_ACTIVE_PEN_CHANGE:"EMBED_ACTIVE_PEN_CHANGE",EMBED_ACTIVE_THEME_CHANGE:"EMBED_ACTIVE_THEME_CHANGE",EMBED_ATTRIBUTE_CHANGE:"EMBED_ATTRIBUTE_CHANGE",EMBED_RESHOWN:"EMBED_RESHOWN",FORMAT_FINISH:"FORMAT_FINISH",FORMAT_ERROR:"FORMAT_ERROR",FORMAT_START:"FORMAT_START",IFRAME_PREVIEW_RELOAD_CSS:"IFRAME_PREVIEW_RELOAD_CSS",IFRAME_PREVIEW_URL_CHANGE:"IFRAME_PREVIEW_URL_CHANGE",KEY_PRESS:"KEY_PRESS",LINTER_FINISH:"LINTER_FINISH",LINTER_START:"LINTER_START",PEN_CHANGE_SERVER:"PEN_CHANGE_SERVER",PEN_CHANGE:"PEN_CHANGE",PEN_EDITOR_CLOSE:"PEN_EDITOR_CLOSE",PEN_EDITOR_CODE_FOLD:"PEN_EDITOR_CODE_FOLD",PEN_EDITOR_ERRORS:"PEN_EDITOR_ERRORS",PEN_EDITOR_EXPAND:"PEN_EDITOR_EXPAND",PEN_EDITOR_FOLD_ALL:"PEN_EDITOR_FOLD_ALL",PEN_EDITOR_LOADED:"PEN_EDITOR_LOADED",PEN_EDITOR_REFRESH_REQUEST:"PEN_EDITOR_REFRESH_REQUEST",PEN_EDITOR_RESET_SIZES:"PEN_EDITOR_RESET_SIZES",PEN_EDITOR_SIZES_CHANGE:"PEN_EDITOR_SIZES_CHANGE",PEN_EDITOR_UI_CHANGE_SERVER:"PEN_EDITOR_UI_CHANGE_SERVER",PEN_EDITOR_UI_CHANGE:"PEN_EDITOR_UI_CHANGE",PEN_EDITOR_UI_DISABLE:"PEN_EDITOR_UI_DISABLE",PEN_EDITOR_UI_ENABLE:"PEN_EDITOR_UI_ENABLE",PEN_EDITOR_UNFOLD_ALL:"PEN_EDITOR_UNFOLD_ALL",PEN_ERROR_INFINITE_LOOP:"PEN_ERROR_INFINITE_LOOP",PEN_ERROR_RUNTIME:"PEN_ERROR_RUNTIME",PEN_ERRORS:"PEN_ERRORS",PEN_LIVE_CHANGE:"PEN_LIVE_CHANGE",PEN_LOGS:"PEN_LOGS",PEN_MANIFEST_CHANGE:"PEN_MANIFEST_CHANGE",PEN_MANIFEST_FULL:"PEN_MANIFEST_FULL",PEN_PREVIEW_FINISH:"PEN_PREVIEW_FINISH",PEN_PREVIEW_START:"PEN_PREVIEW_START",PEN_SAVED:"PEN_SAVED",POPUP_CLOSE:"POPUP_CLOSE",POPUP_OPEN:"POPUP_OPEN",POST_CHANGE:"POST_CHANGE",POST_SAVED:"POST_SAVED",PROCESSING_FINISH:"PROCESSING_FINISH",PROCESSING_START:"PROCESSED_STARTED"},function(){const E=30,_=["css_pre_processor","css_prefix","css_starter","description","head","html_classes","html_pre_processor","js_pre_processor","js_library","resources","title"],N={DEPENDENCIES:"DEPENDENCIES",IMPORTS:"IMPORTS"},S=["css_pre_processor","css_prefix","css_starter","css","description","editor_settings","head","html_classes","html_pre_processor","html","id","js_pre_processor","js_library","js","newTags","parent_id","private","resources","slug_hash_private","slug_hash","tags","team_id","template","title","user_id"],R=["css_pre_processor","css_prefix","css_starter","css","head","html_classes","html_pre_processor","html","js_pre_processor","js_library","js","resources"],T=["html","css","js"],O="INLINE_PEN_STYLESHEET_ID",I=50;window.PEN_CONSTANTS={CANONICAL_IMPORTS:N,COLLAB_SYNC_ATTRIBUTES:_,DATA_ATTRIBUTES:S,INLINE_PEN_STYLESHEET_ID:O,MAX_DEPENDENCIES:E,MAX_PACKAGE_VERSIONS:I,PREVIEW_ATTRIBUTES:R,TYPES:T}}(),function(){function E(E){try{const{action:N,css:S}=E.data??{action:"",css:""};HUB_EVENTS.IFRAME_PREVIEW_RELOAD_CSS===N&&_(S)}catch{}}function _(E){const _=document.querySelectorAll(`#${S}`);N(E);for(const E of _)E.remove();window.PrefixFree&&StyleFix.process()}function N(E){const _=document.createElement("style");_.id=S,_.styleSheet?_.styleSheet.cssText=E:_.append(document.createTextNode(E)),R.append(_)}const{INLINE_PEN_STYLESHEET_ID:S}=PEN_CONSTANTS,R=document.head||document.querySelectorAll("head")[0];window.addEventListener("message",E,!1)}();
-</script>
-
-<script>
-    !function(){function n(n){const{message:o,filename:i,lineno:t,colno:s}=n;if(e.test(i)){const n={topic:HUB_EVENTS.PEN_ERROR_RUNTIME,data:{message:o,filename:i,line:t,lineno:t,colno:s}};window.parent.postMessage(n,"*")}}window.addEventListener("error",n);const e=/(boomboom\/(index|pen)\.js|index.html)/;window.__handleRuntimeErrors=n}();
-</script>
-
-<script>
-// ===========================================
-// basics of drawing app
-// ===========================================
-
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-var radius = 10;
-var dragging = false; //false when mouseup
-
-context.lineWidth = radius * 2;
-
-var putPoint = function (e) {
-  if (dragging) {
-    context.lineTo(e.clientX, e.clientY);
-    context.stroke();
-    context.beginPath();
-    context.arc(e.clientX, e.clientY, radius, 0, Math.PI * 2);
-    context.fill();
-    context.beginPath();
-    context.moveTo(e.clientX, e.clientY);
-  }
-  /*offsetX, offsetY not standardized use client instead
-  context.arc(e.offsetX, e.offsetY, radius, 0, Math.PI * 2, true);*/
-};
-
-// puts one point on canvas
-// canvas.addEventListener('mousedown', putPoint);
-
-// draws a line whenever mouse moves; no control.
-//canvas.addEventListener('mousemove',putPoint);
-
-var engage = function (e) {
-  dragging = true;
-  putPoint(e); // allows you to click a dot.
-};
-
-var disengage = function () {
-  dragging = false;
-  context.beginPath(); // keeps lines from connecting
-};
-
-canvas.addEventListener('mousedown', engage);
-canvas.addEventListener('mousemove', putPoint);
-canvas.addEventListener('mouseup', disengage);
-
-// ===========================================
-// adding toolbar functionality
-// ===========================================
-
-var setRadius = function (newRadius) {
-  if (newRadius < minRad) {
-    newRadius = minRad;
-  } else if (newRadius > maxRad) {
-    newRadius = maxRad;
-  }
-  radius = newRadius;
-  context.lineWidth = radius * 2;
-
-  radSpan.innerHTML = radius;
-};
-
-var minRad = 0.5;
-var maxRad = 100;
-var defaultRad = 20;
-var interval = 5;
-var radSpan = document.getElementById('radVal');
-var decRad = document.getElementById('decRad');
-var incRad = document.getElementById('incRad');
-
-decRad.addEventListener('click', function () {
-  setRadius(radius - interval);
-});
-
-incRad.addEventListener('click', function () {
-  setRadius(radius + interval);
-});
-
-setRadius(defaultRad);
-
-// =====================================
-//  adding color swatches
-// =====================================
-
-// create colors dynamically
-var colors = ['black', 'grey', 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
-
-var swatches = document.getElementsByClassName('swatch');
-
-/*Replaced by following code
-for(var i=0, n=swatches.length; i<n; i++) {
-  swatches[i].addEventListener('click',setSwatch);
-}*/
-
-for (var i = 0, n = colors.length; i < n; i++) {if (window.CP.shouldStopExecution(0)) break;
-  var swatch = document.createElement('div');
-  swatch.className = 'swatch';
-  swatch.style.backgroundColor = colors[i];
-  swatch.addEventListener('click', setSwatch);
-  document.getElementById('colors').appendChild(swatch);
-}window.CP.exitedLoop(0);
-
-function setColor(color) {
-  context.fillStyle = color;
-  context.strokeStyle = color;
-  var active = document.getElementsByClassName('active')[0];
-  if (active) {
-    active.className = 'swatch';
-  }
-}
-
-function setSwatch(e) {
-  // identify swatch being clicked
-  var swatch = e.target; // which swatch was clicked
-  // set color
-  setColor(swatch.style.backgroundColor);
-  // give active class
-  swatch.className += ' active';
-
-}
-  </script>
 
 <!-- Randomized Header Image -->
 <script>
@@ -248,6 +117,149 @@ function setSwatch(e) {
   // Randomly select an image from the array and apply it as the background
   document.getElementById('canvas').style.backgroundImage = `url(${images[Math.floor(Math.random() * images.length)]})`;
 </script>
+
+<script>
+ var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+
+var radius = 10;
+var dragging = false;
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+context.lineWidth = radius*2;
+
+var putPoint = function (e) {
+    if (dragging) {
+        context.lineTo(e.clientX, e.clientY);
+        context.stroke();
+        context.beginPath();
+        context.arc(e.clientX, e.clientY, radius, 0, Math.PI * 2);
+        /*
+            x, y, startAngle (radian), endAngle (radian), [antiClockwise]
+            2 PI radians = 360°
+            PI radians = 180°
+            PI / 2 radians = 90°
+        */
+        context.fill();
+        context.beginPath();
+        context.moveTo(e.clientX, e.clientY);
+
+    }
+
+}
+
+var engage = function (e) {
+    dragging = true;
+    putPoint(e);
+    //puts a dot on mousedown, even if the cursor hasn't moved
+}
+
+var disengage = function () {
+    dragging = false;
+    context.beginPath();
+}
+
+//contents of radius.js
+var minRad = 0.5,
+    maxRad = 100,
+    defaultRad = 20,
+    interval = 5,
+    radSpan = document.getElementById("radval"),
+    decRad = document.getElementById("decrad"),
+    incRad = document.getElementById("incrad");
+
+var setRadius = function(newRadius) {
+    if(newRadius < minRad) {
+        newRadius = minRad;
+    } else if (newRadius > maxRad) {
+        newRadius = maxRad;
+    }
+    radius = newRadius;
+    context.lineWidth = radius * 2;
+
+    radSpan.innerHTML = radius;
+}
+//end radius.js
+
+
+//contents of colors.js
+var colors = [
+    'black',
+    'grey',
+    'white',
+    'red',
+    'orange',
+    'yellow',
+    'green',
+    'blue',
+    'indigo',
+    'violet'
+]
+
+var swatches = document.getElementsByClassName('swatch');
+
+/*
+for (var i=0, n=swatches.length; i<n; i++) {
+    swatches[i].addEventListener('click', setSwatch);
+}
+*/
+
+//create swatches from array of colors
+for (var i = 0, n = colors.length; i < n; i++) {
+    var swatch = document.createElement('div');
+    swatch.className = 'swatch';
+    swatch.style.backgroundColor = colors[i];
+    swatch.addEventListener('click', setSwatch);
+    document.getElementById('colors').appendChild(swatch);
+
+}
+
+
+
+function setColor(color) {
+    context.fillStyle = color;
+    context.strokeStyle = color;
+    var active = document.getElementsByClassName('active')[0]; //active should be any array of just one element
+    if (active) {
+        active.className = "swatch";
+    }
+}
+
+function setSwatch(e) {
+    //identify swatch
+    var swatch = e.target; //element on which even was fired
+
+    //set color
+    setColor(swatch.style.backgroundColor);
+
+    //give active class
+    swatch.className += " active"; //appending space-active so class names will be seperated
+}
+
+setSwatch({target: document.getElementsByClassName('swatch')[0]});
+//end colors.js
+
+
+
+    //events for main.js
+    canvas.addEventListener('mousedown', engage, false);
+    canvas.addEventListener('mouseup', disengage, false);
+    canvas.addEventListener('mousemove', putPoint, false);
+
+    //events for radius.js
+    decRad.addEventListener('click', function () {
+        setRadius(radius - interval);
+    });
+    incRad.addEventListener('click', function () {
+        setRadius(radius + interval);
+    });
+    setRadius(defaultRad);
+
+    //events for colors.js
+
+  </script>
 
 </body>
 </html>
